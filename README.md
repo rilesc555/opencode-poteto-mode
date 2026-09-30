@@ -10,6 +10,8 @@ Every bundled skill also has a slash command. Examples include `/how`, `/why`, `
 
 Run `/setup-pstack` only if you want explicit models for selected roles. The default is to inherit the active session model.
 
+Read the [adapted pstack guide](./docs/guide/README.md) for setup, prompts, playbooks, verification, and autonomous work.
+
 ## OpenCode adaptations
 
 - The plugin registers 52 skills with the OpenCode skill registry.

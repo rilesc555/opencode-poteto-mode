@@ -1,0 +1,67 @@
+# Make it yours
+
+poteto-mode is one person's style. The machinery underneath, playbooks, routing, model roles, works just as well wearing yours. This page covers generating a personal mode, capturing lessons from a session, authoring a focused skill, and testing a skill change before you trust it.
+
+## Generate your own mode with `/automate-me`
+
+```text
+/automate-me
+```
+
+[`/automate-me`](../../skills/automate-me/SKILL.md) reads sessions that this plugin has indexed for the active project. It looks for repeated preferences in replies, delegation, verification, code, prose, and process. The index starts when you install the plugin. If the sample is too small, the skill asks whether to continue. It drafts `.opencode/skills/<your-name>-mode/SKILL.md` through the bundled `create-skill` flow, runs the draft through [`/unslop`](../../skills/unslop/SKILL.md), and opens a PR from a worktree.
+
+Run it again whenever your habits drift:
+
+```text
+/automate-me update my mode skill with everything since its last edit
+```
+
+Update mode mines only the history since the skill last changed. It keeps rules you haven't contradicted, revises the ones with new evidence, and adds sections only for genuinely new patterns.
+
+## Capture a session's lessons with `/reflect`
+
+Right after a task that taught you something, run:
+
+```text
+/reflect that took way too long. capture what we learned so the next run doesn't repeat it.
+```
+
+[`/reflect`](../../skills/reflect/SKILL.md) prepares a digest of the active conversation and sends it to three parallel reviewers. A synthesizer sorts proposals into `Accepted`, `Rejected`, and `Backlog`, then waits for your approval before any skill changes. Approve a proposal only if it would change a future decision. One unusual session is not a rule.
+
+## Author a focused skill
+
+When you already know the workflow you want to capture:
+
+```text
+/poteto-mode write a skill for verifying database migrations in this repo
+```
+
+Writing a skill matches the [Authoring or modifying a skill playbook](../../skills/poteto-mode/playbooks/authoring-a-skill.md). It routes through the bundled [`create-skill`](../../skills/create-skill/SKILL.md), validates the frontmatter and links, and ships the result through the Opening a PR playbook. Agent-facing prose has a higher bar than human prose because a weak sentence becomes an instruction that a future agent follows.
+
+One special case has its own generator. A skill that must drive your app and prove behavior is a verification skill, so use [`/create-verification-skill`](../../skills/create-verification-skill/SKILL.md) and [`/maintain-verification-skill`](../../skills/maintain-verification-skill/SKILL.md) instead. [Verify and ship](./06-verify-and-ship.md#create-a-project-verification-skill) covers both.
+
+## Write docs to a standard with `/technical-writing`
+
+Skills aren't the only prose you ship. For docs, RFCs, readmes, PR descriptions, and commit messages:
+
+```text
+/technical-writing review the readme changes
+```
+
+[`/technical-writing`](../../skills/technical-writing/SKILL.md) applies a layered standard with one goal, prose a tired engineer understands on the first read. It picks the document's mode first (tutorial, how-to, reference, or explanation), then works sentence by sentence: who does what, one thought per sentence, nothing readable two ways. Use it to review what you or an agent just wrote, or name it up front when you ask for a doc.
+
+## Test a skill change blind
+
+A skill edit affects every future session, so test it like the experiment it is:
+
+```text
+/poteto-mode run the eval playbook on this skill change. same task for both variants, candidates stay blind.
+```
+
+The [Eval playbook](../../skills/poteto-mode/playbooks/eval.md) accounts for the observer effect. Candidate subagents get a normal task in isolated directories and do not know about the other attempt. One judge scores both outputs under neutral labels. The plugin's session-context tool lets the judge check which files and tools each candidate used instead of trusting self-reports.
+
+Read every output yourself before accepting the verdict. If you disagree with the judge, suspect the rubric before you suspect your judgment.
+
+**Pitfall:** don't edit a skill mid-task because it's misbehaving. Fix it in its own PR and keep the task moving. A skill edit that ships tangled into feature work is invisible to review and impossible to evaluate.
+
+Next: [Recipes and pitfalls](./10-recipes-and-pitfalls.md).
