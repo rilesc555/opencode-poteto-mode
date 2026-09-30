@@ -30,6 +30,14 @@ bun run check
 
 OpenCode loads this directory automatically from `~/.config/opencode/plugins/`.
 
+## Install it globally
+
+1. Copy or clone this repository to `~/.config/opencode/plugins/poteto-mode`.
+2. Run `bun install` in that directory.
+3. Run `bun run check`.
+4. Restart OpenCode with `opencode service restart`, or touch `index.ts` while OpenCode is running.
+5. Start a new session and run `/poteto-mode <task>`.
+
 ## Upstream
 
 The source material comes from `cursor/plugins`, pstack version 0.15.5, commit `2eb7ed4613cfc8f098dfe464a23680ea44d84c5e`.

@@ -6,9 +6,9 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "test": "bun test src",
-    "typecheck": "tsc --noEmit",
-    "check": "bun run typecheck && bun run test"
+    "test": "bun test src && bun test skills/poteto-mode/scripts/orch skills/poteto-mode/scripts/watch-pr",
+    "typecheck": "tsc --noEmit && tsc --ignoreConfig --noEmit --strict --target ESNext --module Preserve --moduleResolution bundler --allowImportingTsExtensions --types bun skills/poteto-mode/scripts/orch/orch.ts skills/poteto-mode/scripts/orch/store.ts && tsc --project skills/poteto-mode/scripts/watch-pr/tsconfig.json --noEmit --strict",
+    "check": "bun run typecheck && bun run test && bash -n skills/poteto-mode/scripts/worktree-audit.sh"
   },
   "devDependencies": {
     "@types/bun": "latest",

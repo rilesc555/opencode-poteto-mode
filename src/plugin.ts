@@ -1,5 +1,7 @@
 import { Plugin } from "@opencode/plugin"
 import type { Skill } from "@opencode/schema/skill"
+import { isExitPrompt, withSkill } from "./mode.ts"
+import { listIndexedSessions } from "./session-index.ts"
 import { loadBundledSkills } from "./skills.ts"
 
 const MODE_SKILL_ID = "poteto-mode"
@@ -37,7 +39,7 @@ export default Plugin.define({
             await ctx.session.prompt({
               ...prompt,
               sessionID,
-              skills: [...(prompt.skills ?? []), { id: skill.id as Skill.ID }],
+            skills: withSkill(prompt.skills, skill.id) as typeof prompt.skills,
               delivery,
             })
           },
@@ -52,7 +54,7 @@ export default Plugin.define({
           await ctx.session.prompt({
             ...prompt,
             sessionID,
-            skills: [...(prompt.skills ?? []), { id: MODE_SKILL_ID as Skill.ID }],
+            skills: withSkill(prompt.skills, MODE_SKILL_ID) as typeof prompt.skills,
             delivery,
           })
         },
@@ -78,18 +80,11 @@ export default Plugin.define({
         options: { namespace: "pstack", codemode: true },
         execute: async (input) => {
           const value = input as { limit?: number; search?: string }
-          const page = await ctx.storage.scan({ prefix: "session/", limit: 500 })
-          const search = value.search?.toLowerCase()
-          const sessions = page.entries
-            .map((entry) => entry.value)
-            .filter((entry): entry is { id: string; title?: string; updated: number; directory: string } => {
-              if (!entry || typeof entry !== "object") return false
-              const candidate = entry as Record<string, unknown>
-              return typeof candidate.id === "string" && typeof candidate.updated === "number"
-            })
-            .filter((session) => !search || `${session.title ?? ""} ${session.id}`.toLowerCase().includes(search))
-            .sort((a, b) => b.updated - a.updated)
-            .slice(0, value.limit ?? 20)
+          const sessions = await listIndexedSessions(ctx.storage, {
+            projectID: ctx.location.project.id,
+            limit: value.limit ?? 20,
+            ...(value.search === undefined ? {} : { search: value.search }),
+          })
           return { content: JSON.stringify(sessions, null, 2) }
         },
       })
@@ -121,13 +116,14 @@ export default Plugin.define({
       const session = await ctx.session.get({ sessionID: event.sessionID })
       await ctx.storage.set(sessionKey(event.sessionID), {
         id: session.id,
+        projectID: session.projectID,
         updated: Date.now(),
         directory: session.location.directory,
+        ...(session.parentID === undefined ? {} : { parentID: session.parentID }),
         ...(session.title === undefined ? {} : { title: session.title }),
       })
 
-      const normalized = event.prompt.text.trim().toLowerCase()
-      if (/^(exit|disable|leave|stop) poteto(?: mode)?[.!]?$/.test(normalized)) {
+      if (isExitPrompt(event.prompt.text)) {
         await ctx.storage.remove(storageKey(event.sessionID))
         event.prompt.skills = (event.prompt.skills ?? []).filter((skill) => skill.id !== MODE_SKILL_ID)
         return
@@ -135,8 +131,7 @@ export default Plugin.define({
 
       const enabled = await ctx.storage.get(storageKey(event.sessionID))
       if (enabled !== true) return
-      if ((event.prompt.skills ?? []).some((skill) => skill.id === MODE_SKILL_ID)) return
-      event.prompt.skills = [...(event.prompt.skills ?? []), { id: MODE_SKILL_ID as Skill.ID }]
+      event.prompt.skills = withSkill(event.prompt.skills, MODE_SKILL_ID) as typeof event.prompt.skills
     })
   },
 })
