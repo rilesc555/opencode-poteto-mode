@@ -1,0 +1,24 @@
+{
+  "name": "opencode-poteto-mode",
+  "version": "0.1.0",
+  "description": "An OpenCode V2 adaptation of pstack and Poteto Mode",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "test": "bun test src",
+    "typecheck": "tsc --noEmit",
+    "check": "bun run typecheck && bun run test"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/node": "^26.6.3"
+  },
+  "peerDependencies": {
+    "typescript": "^7"
+  },
+  "dependencies": {
+    "@opencode/plugin": "2.0.20",
+    "yaml": "^2.9.1"
+  }
+}
