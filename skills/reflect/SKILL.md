@@ -16,7 +16,7 @@ Invoke when the user says "reflect" or "/reflect". Skip when the conversation is
 
 ### 1. Prepare the session digest
 
-Write a tight digest from the active conversation. Include the goal, decisions, failed approaches, evidence, and user corrections. Do not search other OpenCode sessions unless the user asks you to include them.
+Write a tight digest from the active conversation. Include the goal, decisions, failed approaches, evidence, and user corrections. If you know the session ID, use `pstack_session_messages` for paginated evidence and `pstack_session_diff` for file changes. Follow message cursors when needed. Do not search other OpenCode sessions unless the user asks you to include them.
 
 ### 2. Spawn three reviewers in parallel
 

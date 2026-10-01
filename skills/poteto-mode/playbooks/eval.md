@@ -19,7 +19,7 @@
 3. **Author one organic prompt.** What a user would type. No leakage of what's being measured.
 4. **Spawn N parallel candidates** on different models per the **arena** skill's Phase B. Each works in its own sanitized dir. Same prompt to each.
 5. **Spawn one blinded judge** on a different model family per the **arena** skill's Phase C. Judge sees outputs by sanitized label and the rubric, never a model name.
-6. **Verify the chain from session context, not self-report.** Read each candidate's OpenCode session with `pstack_session_context`. Look at which files and tools each candidate used. Grade chain-following from recorded actions and output, not from the candidate's claims.
+6. **Verify the chain from recorded evidence, not self-report.** Read each candidate's session with `pstack_session_messages` and follow cursors as needed. Use `pstack_session_diff` for file changes and `pstack_session_context` when the context view is needed. Grade chain-following from recorded actions and output, not from the candidate's claims.
 7. **Read every candidate output yourself** end to end. Compare to the judge's verdict. Disagreement means a model is biased or the rubric is ambiguous. Synthesize.
 
 **Reply:** variant under test, rubric, per-candidate notes, judge's verdict, your synthesis, and a recommendation for whether to promote the variant.

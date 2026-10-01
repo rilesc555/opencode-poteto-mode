@@ -26,6 +26,8 @@ Update mode changes the rest of the flow:
 
 ### 1. Mine their history
 
+Prefer `pstack_session_messages` for bounded message pages. Follow returned cursors with the same session and type when more evidence is needed. Use `pstack_session_context` only when the context view is needed.
+
 Use `pstack_recent_sessions` to list top-level sessions from the OpenCode session API for the active project. Use `pstack_session_context` only for sessions that can provide evidence for a recurring preference. Do not read another project's sessions. If the history is too small, ask the user whether to continue with the available sample.
 
 Survey recent sessions for recurring patterns. For a large history, run parallel subagents over disjoint session ID slices. Each worker receives only the session IDs it must read and returns a short list of patterns with evidence pointers. Look for these signals:

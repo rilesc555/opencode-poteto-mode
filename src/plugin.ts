@@ -3,6 +3,8 @@ import type { Skill } from "@opencode/schema/skill"
 import { isExitPrompt, withSkill } from "./mode.ts"
 import { listProjectSessions } from "./session-client.ts"
 import { loadBundledSkills } from "./skills.ts"
+import type { MessageListInput, SessionDiffInput } from "@opencode/client"
+import { activeProjectSessions, connectSessionClient, projectSessionDiff, projectSessionMessages } from "./session-inspection.ts"
 
 const MODE_SKILL_ID = "poteto-mode"
 const storageKey = (sessionID: string) => `mode/${sessionID}`
@@ -64,6 +66,54 @@ export default Plugin.define({
       editor.namespace({
         name: "pstack",
         description: "Read OpenCode session history for pstack recall and reflection workflows",
+      })
+      editor.add({
+        name: "active_sessions",
+        description: "List running sessions and their directories for this project, including child sessions. Idle sessions are not listed.",
+        input: { type: "object", properties: {}, additionalProperties: false },
+        options: { namespace: "pstack", codemode: true },
+        execute: async (_input, context) => ({
+          content: JSON.stringify(await activeProjectSessions(await connectSessionClient(), ctx.location.project.id, context.signal), null, 2),
+        }),
+      })
+      editor.add({
+        name: "session_messages",
+        description: "Read one page of messages from a session in this project. Follow returned cursors for more messages.",
+        input: {
+          type: "object",
+          properties: {
+            sessionID: { type: "string", minLength: 1 },
+            limit: { type: "integer", minimum: 1, maximum: 50, default: 20 },
+            order: { type: "string", enum: ["asc", "desc"], default: "desc" },
+            cursor: { type: "string" },
+            type: { type: "string", enum: ["agent-switched", "model-switched", "location-switched", "user", "synthetic", "system", "skill", "shell", "assistant", "compaction"] },
+          },
+          required: ["sessionID"],
+          additionalProperties: false,
+        },
+        options: { namespace: "pstack", codemode: true },
+        execute: async (input, context) => ({
+          content: JSON.stringify(await projectSessionMessages(await connectSessionClient(), ctx.location.project.id, input as MessageListInput, context.signal), null, 2),
+        }),
+      })
+      editor.add({
+        name: "session_diff",
+        description: "Read file changes between session turns in this project. Optional from and to values are message IDs.",
+        input: {
+          type: "object",
+          properties: {
+            sessionID: { type: "string", minLength: 1 },
+            from: { type: "string" },
+            to: { type: "string" },
+            context: { type: "integer", minimum: 0, maximum: 20 },
+          },
+          required: ["sessionID"],
+          additionalProperties: false,
+        },
+        options: { namespace: "pstack", codemode: true },
+        execute: async (input, context) => ({
+          content: JSON.stringify(await projectSessionDiff(await connectSessionClient(), ctx.location.project.id, input as SessionDiffInput, context.signal), null, 2),
+        }),
       })
       editor.add({
         name: "recent_sessions",

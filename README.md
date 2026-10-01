@@ -17,7 +17,7 @@ Read the [adapted pstack guide](./docs/guide/README.md) for setup, prompts, play
 - The plugin registers 52 skills with the OpenCode skill registry.
 - It registers slash commands for every skill.
 - A prompt hook keeps Poteto Mode active for one session.
-- Two tools provide project-scoped OpenCode session history for `recall`, `reflect`, and session pickup. The list tool reads the OpenCode session API, so it includes sessions from before plugin installation.
+- Five tools provide project-scoped session lists, running sessions, paginated messages, session context, and session diffs. They include sessions from before plugin installation. See [session tools](./docs/session-tools.md).
 - OpenCode background subagents replace Cursor Task and cloud-agent instructions.
 - `~/.config/opencode/pstack-models.md` replaces Cursor model rules.
 - The plugin bundles adapted `deslop`, `control-cli`, and `control-ui` skills.

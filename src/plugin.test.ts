@@ -60,7 +60,7 @@ describe("plugin registration", () => {
 
     expect(skills.size).toBe(52)
     expect(commands).toHaveLength(52)
-    expect(tools.map((tool) => tool.name)).toEqual(["recent_sessions", "session_context"])
+    expect(tools.map((tool) => tool.name)).toEqual(["active_sessions", "session_messages", "session_diff", "recent_sessions", "session_context"])
     expect(promptHook).toBeDefined()
 
     const command = commands.find((candidate) => candidate.name === "poteto-mode")!

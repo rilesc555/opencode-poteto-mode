@@ -54,6 +54,8 @@ Commit it only when the work is ambitious enough that a reviewer needs the trail
 
 ## Audit the log against the transcript
 
+Use `pstack_session_messages` to read evidence in pages and `pstack_session_diff` to compare recorded file changes. Follow message cursors when needed. A diff is evidence of changes, not evidence that verification passed.
+
 At the end of the run, check the log against the active conversation and the produced artifacts. If you need an older OpenCode session from this project, use `pstack_session_context` with its exact session ID. Walk this run's rows against what happened. Each stretch begins at this run's `start` row, or at the first row if this run created the log, and ends at the next `start` row from another run:
 
 - Check that every row maps to a real decision or action.
