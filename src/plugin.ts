@@ -1,12 +1,11 @@
 import { Plugin } from "@opencode/plugin"
 import type { Skill } from "@opencode/schema/skill"
 import { isExitPrompt, withSkill } from "./mode.ts"
-import { listIndexedSessions } from "./session-index.ts"
+import { listProjectSessions } from "./session-client.ts"
 import { loadBundledSkills } from "./skills.ts"
 
 const MODE_SKILL_ID = "poteto-mode"
 const storageKey = (sessionID: string) => `mode/${sessionID}`
-const sessionKey = (sessionID: string) => `session/${sessionID}`
 
 export default Plugin.define({
   id: "poteto.mode",
@@ -39,7 +38,7 @@ export default Plugin.define({
             await ctx.session.prompt({
               ...prompt,
               sessionID,
-            skills: withSkill(prompt.skills, skill.id) as typeof prompt.skills,
+              skills: withSkill(prompt.skills, skill.id) as typeof prompt.skills,
               delivery,
             })
           },
@@ -80,7 +79,7 @@ export default Plugin.define({
         options: { namespace: "pstack", codemode: true },
         execute: async (input) => {
           const value = input as { limit?: number; search?: string }
-          const sessions = await listIndexedSessions(ctx.storage, {
+          const sessions = await listProjectSessions({
             projectID: ctx.location.project.id,
             limit: value.limit ?? 20,
             ...(value.search === undefined ? {} : { search: value.search }),
@@ -113,16 +112,6 @@ export default Plugin.define({
     })
 
     await ctx.session.hook("prompt", async (event) => {
-      const session = await ctx.session.get({ sessionID: event.sessionID })
-      await ctx.storage.set(sessionKey(event.sessionID), {
-        id: session.id,
-        projectID: session.projectID,
-        updated: Date.now(),
-        directory: session.location.directory,
-        ...(session.parentID === undefined ? {} : { parentID: session.parentID }),
-        ...(session.title === undefined ? {} : { title: session.title }),
-      })
-
       if (isExitPrompt(event.prompt.text)) {
         await ctx.storage.remove(storageKey(event.sessionID))
         event.prompt.skills = (event.prompt.skills ?? []).filter((skill) => skill.id !== MODE_SKILL_ID)

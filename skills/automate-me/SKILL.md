@@ -26,7 +26,7 @@ Update mode changes the rest of the flow:
 
 ### 1. Mine their history
 
-Use `pstack_recent_sessions` to list sessions observed since plugin installation. Use `pstack_session_context` only for sessions that can provide evidence for a recurring preference. Do not read another project's sessions. If the observed history is too small, ask the user whether to continue with the available sample.
+Use `pstack_recent_sessions` to list top-level sessions from the OpenCode session API for the active project. Use `pstack_session_context` only for sessions that can provide evidence for a recurring preference. Do not read another project's sessions. If the history is too small, ask the user whether to continue with the available sample.
 
 Survey recent sessions for recurring patterns. For a large history, run parallel subagents over disjoint session ID slices. Each worker receives only the session IDs it must read and returns a short list of patterns with evidence pointers. Look for these signals:
 

@@ -36,7 +36,7 @@ The two compose naturally. `do why first then how` is a perfectly good prompt wh
 /recall catch me up on the export work from last week
 ```
 
-[`/recall`](../../skills/recall/SKILL.md) uses the plugin's project-scoped session tools plus the shared record (issues, prior fixes, and current errors). It returns a brief on where things stand and what to do next. The session index starts when you install the plugin. For older work, give it an exact OpenCode session ID or let it use Git, PRs, tickets, and decision logs. If you want to resume one specific session, use the Session pickup playbook below.
+[`/recall`](../../skills/recall/SKILL.md) uses the OpenCode session API plus the shared record (issues, prior fixes, and current errors). It returns a brief on where things stand and what to do next. The session list includes work from before plugin installation. If you want to resume one specific session, use the Session pickup playbook below.
 
 ## Take over prior work with Session pickup
 

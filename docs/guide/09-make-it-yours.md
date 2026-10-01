@@ -8,7 +8,7 @@ poteto-mode is one person's style. The machinery underneath, playbooks, routing,
 /automate-me
 ```
 
-[`/automate-me`](../../skills/automate-me/SKILL.md) reads sessions that this plugin has indexed for the active project. It looks for repeated preferences in replies, delegation, verification, code, prose, and process. The index starts when you install the plugin. If the sample is too small, the skill asks whether to continue. It drafts `.opencode/skills/<your-name>-mode/SKILL.md` through the bundled `create-skill` flow, runs the draft through [`/unslop`](../../skills/unslop/SKILL.md), and opens a PR from a worktree.
+[`/automate-me`](../../skills/automate-me/SKILL.md) reads top-level sessions from the OpenCode session API for the active project. It looks for repeated preferences in replies, delegation, verification, code, prose, and process. If the sample is too small, the skill asks whether to continue. It drafts `.opencode/skills/<your-name>-mode/SKILL.md` through the bundled `create-skill` flow, runs the draft through [`/unslop`](../../skills/unslop/SKILL.md), and opens a PR from a worktree.
 
 Run it again whenever your habits drift:
 
